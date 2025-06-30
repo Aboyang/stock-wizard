@@ -1,20 +1,23 @@
-## About Stock Wizard
-Stock Wizard is a personal project that I built during the year 1 summer break in 2025. It puts together my passion for web development and quantitative finance.
+## About Stock Wizard  
+**Stock Wizard** is a personal project I developed during my Year 1 summer break in 2025. It reflects my passion for both **web development** and **quantitative finance**.
 
-## What it does
-Currently, it offers stock screening with indicators such as annualized return, annualied volatility and sharpe ratio.
-Advanced analytics include rolling statistics for different windows too.
-It allows comparison between different securities including equity and ETFs.
+## Features  
+The application currently supports stock screening using key indicators such as:  
+- **Annualized Return**  
+- **Annualized Volatility**  
+- **Sharpe Ratio**  
 
-## Tech Stacks
-- React
-- Redux (RTK)
-- Node.js
-- Express.js
-- YahooFinance API
+It also provides advanced analytics like rolling statistics over customizable time windows. Users can compare various securities, including both equities and ETFs.
 
-## Outlook for Stock Wizard
-Over the next few months, I'll expand on the features to include 
-- more sophisticated quantitative finance analytics (SARIMA time-series analysis, etc)
-- real-time stock screening
-- investment simulation
+## Tech Stack  
+- **React**  
+- **Redux Toolkit (RTK)**  
+- **Node.js**  
+- **Express.js**  
+- **Yahoo Finance API**  
+
+## Future Plans  
+In the coming months, I plan to enhance Stock Wizard with:  
+- More advanced quantitative finance tools (e.g., SARIMA time-series modeling)  
+- Real-time stock screening capabilities  
+- Investment simulation features  
