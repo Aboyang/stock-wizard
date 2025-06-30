@@ -1,0 +1,56 @@
+.chart-area {
+    background-color: #f6f6f6;
+    width: 100%;
+    height: 620px;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-data {
+    background-color: rgb(202, 58, 58);
+    color: white;
+    width: 80%;
+    height: 80%;
+    padding: 80px;
+    font-size: 3em;
+}
+
+.advanced-area {
+    background-color: #f6f6f6;
+    width: 100%;
+    height: fit-content;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px
+}
+
+.window-choice {
+    background-color: #f6f6f6;
+    width: 100%;
+    height: fit-content;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.window-choice > div {
+    background-color: white;
+    width: 30%;
+    height: fit-content;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.16);
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
