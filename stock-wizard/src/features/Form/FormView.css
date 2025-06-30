@@ -1,0 +1,95 @@
+.symbol-container, .suggestions, .date-container, .menu {
+    width: 100%;
+    height: fit-content;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.text, .btn, .date, .menu {
+    padding: 12px;
+    font-size: 1em;
+}
+
+.setting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    width: 25%;
+    height: fit-content;
+
+    background-color: #f6f6f6;
+
+    padding: 20px;
+    border-radius: 24px;
+    position: relative;
+}
+
+.symbol-container {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+}
+
+.suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background-color: white;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.16);
+    z-index: 5;
+    position: absolute;
+    top: 71px;
+    left: 20px;
+    width: 313px;
+    height: 90px;
+    overflow-y: scroll;
+}
+
+.suggestion {
+    width: 100%;
+}
+
+.text {
+    width: 80%;
+    height: fit-content;
+}
+
+.btn {
+    width: 20%;
+    height: fit-content;
+}
+
+.date-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    background-color: white;
+    position: relative;
+}
+
+.date {
+    padding: 10px;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    position: relative;
+}
+
+.btn {
+    background-color: black;
+    color: white
+}
+
+.icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+}
