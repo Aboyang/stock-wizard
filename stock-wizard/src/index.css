@@ -1,0 +1,11 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: none;
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}

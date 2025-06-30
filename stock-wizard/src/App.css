@@ -1,0 +1,27 @@
+.app {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px
+}
+
+.form-and-cards {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 20px
+}
+
+.cards {
+    padding: 20px;
+    border-radius: 20px;
+    width: 75%;
+    height: 185px;
+    background-color: #f6f6f6;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    overflow-x: scroll;
+}
