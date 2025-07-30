@@ -2,8 +2,9 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
 
-    start: new Date(Date.now() - 2592000000).toISOString(),
+    start: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30 * 6).toISOString(),
     end: new Date(Date.now()).toISOString(),
+    timeframe: '6m',
     interval: '1d'
 
 }
@@ -15,21 +16,33 @@ const formSlice = createSlice({
 
     reducers: {
 
-        changeStart: (state, action) => {
-            state.start = action.payload
-        },
+        changeTimeframe: (state, action) => {
 
-        changeEnd: (state, action) => {
-            state.end = action.payload
-        },
+            state.timeframe = action.payload
 
-        changeInterval: (state, action) => {
-            state.interval = action.payload
+            let n = 1
+            switch (state.timeframe) {
+                case "1m": 
+                    n = 1
+                    break
+                case "3m": 
+                    n = 3
+                    break
+                case "6m": 
+                    n = 6
+                    break
+                case "1y": 
+                    n = 12
+                    break
+                case "2y":
+                    n = 24
+                    break
+            }
+
+            state.start = new Date(Date.now() - 2592000000 * n).toISOString()
         }
     }
 })
 
 export default formSlice.reducer
-export const changeStart = formSlice.actions.changeStart
-export const changeEnd = formSlice.actions.changeEnd
-export const changeInterval = formSlice.actions.changeInterval
+export const changeTimeframe = formSlice.actions.changeTimeframe

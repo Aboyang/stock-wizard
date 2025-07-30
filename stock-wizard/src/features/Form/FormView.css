@@ -1,11 +1,11 @@
-.symbol-container, .suggestions, .date-container, .menu {
+.title-container, .symbol-container, .suggestions, .date-container, .menu {
     width: 100%;
     height: fit-content;
     border-radius: 16px;
     overflow: hidden;
 }
 
-.text, .btn, .date, .menu {
+.title, .text, .btn, .date, .menu {
     padding: 12px;
     font-size: 1em;
 }

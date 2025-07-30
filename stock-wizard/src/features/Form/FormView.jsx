@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux"
 import { addSymbol, fetchData, clearSecs } from "../securitySlice"
-import { changeInterval, changeStart, changeEnd } from "../Form/formSlice"
+import { changeTimeframe } from "../Form/formSlice"
 import { useEffect, useState, useRef } from "react"
 import axios from "axios"
 
@@ -14,7 +14,7 @@ function FormView() {
 
     // redux
     const { symbols } = useSelector((state) => state.security)
-    const { start, end, interval } = useSelector((state) => state.form)
+    const { timeframe } = useSelector((state) => state.form)
     const dispatch = useDispatch()
 
     const run = useRef(false)
@@ -48,7 +48,7 @@ function FormView() {
 
         run.current = true
 
-    }, [start, end, interval])
+    }, [timeframe])
 
 
     // search bar
@@ -75,6 +75,10 @@ function FormView() {
     return (
         <div className="setting">
 
+            <div className="title-container">
+                <h3 className="title">Stock Wizard</h3>
+            </div>
+
             <div className="symbol-container">
                 <input className="text" type="text" placeholder="TSLA" value={symbol} onChange={(e) => setSymbol(e.target.value)}/>
                 <div className="btn" onClick={() => handleAddSec(symbol)}><i className="icon fa-solid fa-magnifying-glass"></i></div>
@@ -94,26 +98,16 @@ function FormView() {
                     ))}
                 </div>
             )}
-
-            <div className="date-container">
-                <input className="date" type="date" value={start} onChange={(e) => {
-                    dispatch(changeStart(e.target.value))
-                    run.current = false
-                }} />
-                to
-                <input className="date" type="date" value={end} onChange={(e) => {
-                    dispatch(changeEnd(e.target.value))
-                    run.current = false
-                }} />
-            </div>
             
-            <select className="menu" value={interval || ""} onChange={(e) => {
-                dispatch(changeInterval(e.target.value))
+            <select className="menu" value={timeframe || ""} onChange={(e) => {
+                dispatch(changeTimeframe(e.target.value))
                 run.current = false
             }}>
-                <option value="1d">1 Day</option>
-                <option value="1wk">1 Week</option>
-                <option value="1mo">1 Month</option>
+                <option value="1m">1 Month</option>
+                <option value="3m">3 Months</option>
+                <option value="6m">6 Months</option>
+                <option value="1y">1 Year</option>
+                <option value="2y">2 Year</option>
             </select>
 
         </div>
