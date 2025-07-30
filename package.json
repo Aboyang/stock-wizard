@@ -7,6 +7,6 @@
     "yahoo-finance2": "^2.13.3"
   }, 
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   }
 }
