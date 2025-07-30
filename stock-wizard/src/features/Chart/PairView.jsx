@@ -23,152 +23,6 @@ function PairView() {
     const { secData, selectedSec } = useSelector((state) => state.security)
     const { start, end, interval } = useSelector((state) => state.form)
     const [meanReversionData, setMeanReversionData] = useState(null)
-        // {
-        // bestCorrelated: {
-        //     symbol: "GOOG",
-        //     correlation: 0.9216940103774693,
-        //     dataPoints: [
-        //     { date: "2025-01-13T14:30:00.000Z", price: 192.2899932861328 },
-        //     { date: "2025-01-14T14:30:00.000Z", price: 191.0500030517578 },
-        //     { date: "2025-01-15T14:30:00.000Z", price: 196.97999572753906 },
-        //     { date: "2025-01-16T14:30:00.000Z", price: 194.41000366210938 },
-        //     { date: "2025-01-17T14:30:00.000Z", price: 197.5500030517578 },
-        //     { date: "2025-07-09T13:30:00.000Z", price: 177.66000366210938 }
-        //     ]
-        // },
-        // normal: {
-        //     meanPriceSpread: 34.01377080698482,
-        //     sdPriceSpread: 7.41382575158821,
-        //     priceSpread: [
-        //         34.01,
-        //         41.42,
-        //         26.60,
-        //         30.30,
-        //         38.70,
-        //         34.80,
-        //         20.77,
-        //         48.30,
-        //         31.00,
-        //         36.50,
-        //         28.00,
-        //         42.90,
-        //         35.10,
-        //         33.20,
-        //         25.30, 
-        //         44.80, 
-        //         38.00,
-        //         39.70,
-        //         29.10,
-        //         34.30,
-        //         31.50,
-        //         40.00,
-        //         36.80,
-        //         23.60, 
-        //         47.10,
-        //         32.10,
-        //         35.50,
-        //         27.40,
-        //         30.70,
-        //         42.20
-        //     ]
-        // },
-        // signals: [
-        //     {
-        //     date: "2025-01-13T14:30:00.000Z",
-        //     price: 218.4600067138672,
-        //     priceSpread: 26.170013427734375,
-        //     zScore: -1.0579905223116604,
-        //     action: "E"
-        //     },
-        //     {
-        //     date: "2025-02-06T14:30:00.000Z",
-        //     price: 238.8300018310547,
-        //     priceSpread: 45.52000427246094,
-        //     zScore: 1.55199674918327,
-        //     action: "S-L"
-        //     },
-        //     {
-        //     date: "2025-02-07T14:30:00.000Z",
-        //     price: 229.14999389648438,
-        //     priceSpread: 42.00999450683594,
-        //     zScore: 1.0785556563880858,
-        //     action: "E"
-        //     },
-        //     {
-        //     date: "2025-02-11T14:30:00.000Z",
-        //     price: 232.75999450683594,
-        //     priceSpread: 45.68998718261719,
-        //     zScore: 1.5749245756323655,
-        //     action: "S-L"
-        //     },
-        //     {
-        //     date: "2025-02-12T14:30:00.000Z",
-        //     price: 228.92999267578125,
-        //     priceSpread: 43.5,
-        //     zScore: 1.2795322564713651,
-        //     action: "E"
-        //     },
-        //     {
-        //     date: "2025-04-14T13:30:00.000Z",
-        //     price: 182.1199951171875,
-        //     priceSpread: 20.649993896484375,
-        //     zScore: -1.8025480174844444,
-        //     action: "L-S"
-        //     },
-        //     {
-        //     date: "2025-04-24T13:30:00.000Z",
-        //     price: 186.5399932861328,
-        //     priceSpread: 25.069992065429688,
-        //     zScore: -1.2063648433656773,
-        //     action: "E"
-        //     },
-        //     {
-        //     date: "2025-05-05T13:30:00.000Z",
-        //     price: 186.35000610351562,
-        //     priceSpread: 20.300003051757812,
-        //     zScore: -1.849755877023305,
-        //     action: "L-S"
-        //     },
-        //     {
-        //     date: "2025-05-07T13:30:00.000Z",
-        //     price: 188.7100067138672,
-        //     priceSpread: 35.910003662109375,
-        //     zScore: 0.2557698169151515,
-        //     action: "E"
-        //     },
-        //     {
-        //     date: "2025-05-12T13:30:00.000Z",
-        //     price: 208.63999938964844,
-        //     priceSpread: 49.05999755859375,
-        //     zScore: 2.0294821129813694,
-        //     action: "S-L"
-        //     },
-        //     {
-        //     date: "2025-05-14T13:30:00.000Z",
-        //     price: 210.25,
-        //     priceSpread: 43.44000244140625,
-        //     zScore: 1.271439598159171,
-        //     action: "E"
-        //     },
-        //     {
-        //     date: "2025-07-07T13:30:00.000Z",
-        //     price: 223.47000122070312,
-        //     priceSpread: 45.910003662109375,
-        //     zScore: 1.6046010863657147,
-        //     action: "S-L"
-        //     },
-        //     {
-        //     date: "2025-07-08T13:30:00.000Z",
-        //     price: 219.36000061035156,
-        //     priceSpread: 44.19999694824219,
-        //     zScore: 1.3739500337022683,
-        //     action: "E"
-        //     }
-        // ]
-        // }
-
-
-
 
     const run = useRef(false)
 
@@ -177,13 +31,13 @@ function PairView() {
 
         let recommendedSecs = []
 
-        let response = await axios.get(`http://localhost:5001/api/recommendation?symbol=${symb}`)
+        let response = await axios.get(`https://stock-wizard-server.onrender.com/api/recommendation?symbol=${symb}`)
         const recommendations = response.data
         
         await new Promise(resolve => setTimeout(resolve, 2000)) // add some bit of delay otherwise hit rate limit LMFAO
 
         for (let rec of recommendations) {
-            let response = await axios.get(`http://localhost:5001/api/sec?symbol=${rec}&start=${new Date(start).getTime()}&end=${new Date(end).getTime()}&interval=${interval}`)
+            let response = await axios.get(`https://stock-wizard-server.onrender.com/api/sec?symbol=${rec}&start=${new Date(start).getTime()}&end=${new Date(end).getTime()}&interval=${interval}`)
             const dataPoints = response.data.map(dailyData => ({
                 date: dailyData.date, 
                 price: dailyData.close 
