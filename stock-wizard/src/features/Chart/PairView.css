@@ -1,0 +1,87 @@
+.correlation-info {
+    background-color: #f6f6f6;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.correlation-metrics {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    width: 100%
+}
+
+.correlation-metrics > div {
+    width: 50%;
+    background-color:rgb(214, 214, 212);
+    padding: 12px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.latest-action {
+    display: flex;
+    flex-direction: column;
+    gap: 4px
+}
+
+.card-content {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+}
+
+.signal {
+    display: flex;
+    place-content: center;
+    font-size: 2em;
+    color: white;
+    height: fit-content;
+    padding: 16px;
+    border-radius: 16px;
+}
+
+.enter {
+    background-color: green;
+}
+
+.exit {
+    background-color: red;
+}
+
+.normal-chart {
+    background-color: #f6f6f6;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.spread-chart {
+    background-color: #f6f6f6;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.pair-chart {
+    background-color: #f6f6f6;
+    border-radius: 16px;
+    padding: 24px;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
