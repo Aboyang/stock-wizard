@@ -64,7 +64,7 @@ function FormView() {
             return
         }
 
-        axios.get(`http://localhost:5001/api/suggestion?search=${symbol}`).then(response => setSuggestion(response.data))
+        axios.get(`https://stock-wizard-server.onrender.com/api/suggestion?search=${symbol}`).then(response => setSuggestion(response.data))
 
     }, [symbol])
 
