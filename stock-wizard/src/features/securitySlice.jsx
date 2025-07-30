@@ -3,9 +3,14 @@ import axios from 'axios'
 
 const initialState = {
 
+    // watchlist
     symbols: ['TSLA'],
     secData: {},
+
+    // selected security
     selectedSec: '',
+
+    // fetching
     loading: false,
     error: false
 }
