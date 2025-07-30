@@ -11,7 +11,7 @@ import 'chartjs-adapter-luxon' // enabling the TimeScale to correctly parse and 
 import './ChartView.css'
 import MAView from './MAView'
 import RollingView from './RollingView'
-import PairView from '../PairView/PairView'
+import PairView from './PairView'
 
 function ChartView() {
 
