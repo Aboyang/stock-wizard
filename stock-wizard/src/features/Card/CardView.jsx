@@ -76,7 +76,7 @@ function CardView( { symbol, index }) {
 
             <div className="metric">
                 <div className="label">Volatility</div>:
-                <div className={annualVolatility === "-" ? "value" :annualVolatility < 0 ? "value red" : "value green"}>{annualVolatility}</div>
+                <div className={annualVolatility === "-" ? "value" :annualVolatility > 0.5 ? "value red" : "value green"}>{annualVolatility}</div>
             </div>
 
             <div className="metric">
