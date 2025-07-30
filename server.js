@@ -4,7 +4,9 @@ const express = require('express')
 const app = express()
 
 // app.use to apply cors middleware; cors middleware to allow specific client
-app.use(cors())
+app.use(cors({
+  origin: 'https://stock-wizard-4llm.vercel.app'
+}))
 
 app.get('/api/sec', (req, res) => {
     
