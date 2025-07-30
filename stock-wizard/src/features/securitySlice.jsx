@@ -19,7 +19,7 @@ export const fetchData = createAsyncThunk('security/fetchData', async (symbol, {
 
     const state = getState().form
 
-    const url = `http://localhost:5001/api/sec?symbol=${symbol}&start=${new Date(state.start).getTime()}&end=${new Date(state.end).getTime()}&interval=${state.interval}`
+    const url = `https://stock-wizard-server.onrender.com/api/sec?symbol=${symbol}&start=${new Date(state.start).getTime()}&end=${new Date(state.end).getTime()}&interval=${state.interval}`
     
     const response = await axios.get(url)
 
