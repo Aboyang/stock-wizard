@@ -45,7 +45,7 @@ Analyze individual stocks with a variety of dynamic analytics:
 - **React JS** – Modular, reusable component-based UI
 - **Redux** – Scalable and predictable state management
 
-### ⚙Backend
+### Backend
 - **Node.js** – REST API logic and server-side processes
 - **yahoo-finance-2** – Reliable module for fetching real-time and historical stock data
 
@@ -53,7 +53,7 @@ Analyze individual stocks with a variety of dynamic analytics:
 ## Live Demo
 
 Explore Stock Wizard now:  
-🔗 **[stock-wizard-4llm.vercel.app](http://stock-wizard-4llm.vercel.app)**
+**[stock-wizard-4llm.vercel.app](http://stock-wizard-4llm.vercel.app)**
 
 
 ## Future Enhancements
