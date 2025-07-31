@@ -56,7 +56,7 @@ Explore Stock Wizard now:
 🔗 **[stock-wizard-4llm.vercel.app](http://stock-wizard-4llm.vercel.app)**
 
 
-## Future Enhancements (Suggestions)
+## Future Enhancements
 - User authentication and watchlist saving
 - Responsive mobile experience
 - Integrate more strategies including time-series forecasting models
