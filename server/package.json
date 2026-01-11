@@ -3,6 +3,6 @@
     "axios": "^1.9.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "yahoo-finance2": "^2.13.3"
+    "yahoo-finance2": "^3.11.2"
   }
 }
