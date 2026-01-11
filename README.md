@@ -53,7 +53,8 @@ Analyze individual stocks with a variety of dynamic analytics:
 ## Live Demo
 
 Explore Stock Wizard now:  
-**[stock-wizard-4llm.vercel.app](http://stock-wizard-4llm.vercel.app)**
+Web App: **[stock-wizard-4llm.vercel.app](http://stock-wizard-4llm.vercel.app)**
+Video Demo: **https://drive.google.com/file/d/1caPkXIeOZIYZJ1jK2FVC4iPzedCQ0xXS/view?usp=sharing**
 
 
 ## Future Enhancements
