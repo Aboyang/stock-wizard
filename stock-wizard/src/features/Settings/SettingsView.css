@@ -1,0 +1,414 @@
+.settings-icon-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #f6f6f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2em;
+    z-index: 50;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.settings-icon-btn:hover {
+    background-color: #ececec;
+    transform: rotate(45deg);
+}
+
+.settings-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.25);
+    z-index: 100;
+}
+
+.settings-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 380px;
+    max-width: 90vw;
+    background-color: white;
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.12);
+    z-index: 101;
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-panel.open {
+    transform: translateX(0);
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid #eee;
+}
+
+.settings-header h3 {
+    font-size: 1.1em;
+}
+
+.settings-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+.settings-close:hover {
+    background-color: #f6f6f6;
+}
+
+.settings-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.settings-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.settings-field-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.settings-field label {
+    font-size: 0.95em;
+    font-weight: 600;
+}
+
+.settings-value {
+    font-size: 0.85em;
+    color: #555;
+}
+
+.settings-field input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #e5e5e5;
+    outline: none;
+    cursor: pointer;
+}
+
+.settings-field input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: black;
+    cursor: grab;
+    border: 3px solid white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.settings-field input[type="range"]::-webkit-slider-thumb:active {
+    cursor: grabbing;
+}
+
+.settings-field input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: black;
+    cursor: grab;
+    border: 3px solid white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.settings-scale {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75em;
+    color: #888;
+}
+
+.settings-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.settings-chip {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background-color: #f6f6f6;
+    font-size: 0.85em;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.settings-chip:hover {
+    background-color: #ececec;
+}
+
+.settings-chip.active {
+    background-color: black;
+    color: white;
+}
+
+/* ── Confirm button ──────────────────────────────────────────────────────── */
+.settings-confirm {
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: none;
+    background-color: black;
+    color: white;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    margin-top: 4px;
+}
+
+.settings-confirm:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+.settings-confirm:disabled {
+    cursor: default;
+}
+
+.settings-confirm.analysing {
+    background: linear-gradient(
+        90deg,
+        #1a1a1a 0%,
+        #2a2a2a 30%,
+        #5a5a5a 50%,
+        #2a2a2a 70%,
+        #1a1a1a 100%
+    );
+    background-size: 200% 100%;
+    animation: confirm-shimmer 1.6s linear infinite;
+    cursor: progress;
+}
+
+@keyframes confirm-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.shimmer-text {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 1) 50%,
+        rgba(255, 255, 255, 0.4) 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer-text-sweep 1.6s linear infinite;
+}
+
+@keyframes shimmer-text-sweep {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ── Advisor output ──────────────────────────────────────────────────────── */
+.advisor-output {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 12px;
+    background-color: #fafafa;
+    border: 1px solid #eee;
+}
+
+.advisor-markdown {
+    font-size: 0.85em;
+    line-height: 1.55;
+    color: #222;
+}
+
+.advisor-markdown p {
+    margin: 0 0 8px 0;
+}
+
+.advisor-markdown h1,
+.advisor-markdown h2,
+.advisor-markdown h3 {
+    font-size: 1em;
+    font-weight: 600;
+    margin: 12px 0 6px 0;
+}
+
+.advisor-markdown ul,
+.advisor-markdown ol {
+    margin: 4px 0 8px 18px;
+    padding: 0;
+}
+
+.advisor-markdown li {
+    margin: 2px 0;
+}
+
+.advisor-markdown strong {
+    font-weight: 600;
+}
+
+.advisor-markdown table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8px 0;
+    font-size: 0.92em;
+}
+
+.advisor-markdown th,
+.advisor-markdown td {
+    border: 1px solid #e5e5e5;
+    padding: 6px 8px;
+    text-align: left;
+}
+
+.advisor-markdown th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+}
+
+.advisor-markdown code {
+    background-color: #f0f0f0;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.streaming-cursor {
+    display: inline-block;
+    opacity: 0.6;
+    margin-left: 2px;
+    animation: cursor-blink 1s steps(2) infinite;
+}
+
+@keyframes cursor-blink {
+    50% { opacity: 0; }
+}
+
+/* ── Watchlist suggestion ────────────────────────────────────────────────── */
+.advisor-watchlist {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.advisor-watchlist-label {
+    font-size: 0.88em;
+    font-weight: 600;
+    color: #333;
+}
+
+.advisor-tickers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.advisor-ticker {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background-color: white;
+    border: 1px solid #ddd;
+    font-size: 0.82em;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.advisor-ticker:hover {
+    background-color: black;
+    color: white;
+    border-color: black;
+    transform: translateY(-1px);
+}
+
+.advisor-ticker.added {
+    background-color: #ecfdf5;
+    border-color: #6ee7b7;
+    color: #047857;
+    cursor: default;
+}
+
+.advisor-ticker.added:hover {
+    background-color: #ecfdf5;
+    color: #047857;
+    transform: none;
+}
+
+.advisor-ticker-symbol {
+    font-weight: 600;
+}
+
+.advisor-ticker-alloc {
+    font-size: 0.85em;
+    opacity: 0.75;
+}
+
+.advisor-ticker-check {
+    font-size: 0.78em;
+}
+
+/* ── Shimmer lines (pre-stream placeholder) ──────────────────────────────── */
+.shimmer-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 0;
+}
+
+.shimmer-line {
+    height: 10px;
+    border-radius: 6px;
+    background: linear-gradient(
+        90deg,
+        #ececec 25%,
+        #f8f8f8 50%,
+        #ececec 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer-line-sweep 1.4s ease-in-out infinite;
+}
+
+.shimmer-line--long   { width: 88%; }
+.shimmer-line--medium { width: 62%; animation-delay: 0.1s; }
+.shimmer-line--short  { width: 40%; animation-delay: 0.2s; }
+
+@keyframes shimmer-line-sweep {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}

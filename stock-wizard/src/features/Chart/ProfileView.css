@@ -1,0 +1,211 @@
+.profile-area {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.profile-panel {
+    background-color: #f6f6f6;
+    flex: 1;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.profile-panel h3 {
+    margin: 0;
+}
+
+.profile-meta {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.profile-chip {
+    background-color: white;
+    border: 1px solid #6050D4;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 0.85em;
+    box-shadow: 0 2px 6px 0 rgba(96, 80, 212, 0.12);
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    align-items: center;
+}
+
+.profile-chip-label {
+    font-size: 0.75em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888;
+}
+
+.profile-chip-value {
+    color: #333;
+    font-weight: 500;
+}
+
+.profile-summary-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.profile-summary {
+    font-size: 0.9em;
+    line-height: 1.5;
+    color: #333;
+}
+
+.profile-summary-clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.profile-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #6050D4;
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.profile-toggle:hover {
+    text-decoration: underline;
+}
+
+.profile-empty {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.profile-placeholder {
+    color: #aaa;
+    font-style: italic;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+}
+
+.fin-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.fin-stat {
+    background-color: white;
+    border: 1px solid #6050D4;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 0 2px 6px 0 rgba(96, 80, 212, 0.12);
+}
+
+.fin-stat-value {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: #333;
+}
+
+.fin-stat-label {
+    font-size: 0.7em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888;
+}
+
+.fin-stat-compare {
+    font-size: 0.75em;
+    color: #6050D4;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+.fin-stat-yoy {
+    font-size: 0.75em;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.fin-stat-yoy-up {
+    color: #1a9b62;
+}
+
+.fin-stat-yoy-down {
+    color: #cf3a3a;
+}
+
+.fin-stat-skeleton {
+    gap: 8px;
+}
+
+.fin-events {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.fin-events-title {
+    font-size: 0.75em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.fin-event-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+    padding: 6px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.fin-event-row:last-child {
+    border-bottom: none;
+}
+
+.fin-event-label {
+    color: #666;
+}
+
+.fin-event-value {
+    color: #333;
+    font-weight: 600;
+}
+
+.profile-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.profile-skeleton-bar {
+    height: 12px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #ececec 0%, #f6f6f6 50%, #ececec 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+}

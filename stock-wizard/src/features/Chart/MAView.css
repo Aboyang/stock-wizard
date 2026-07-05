@@ -1,0 +1,51 @@
+.ma-chart {
+    background-color: #f6f6f6;
+    width: 100%;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px 
+}
+
+.crossover-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #f6f6f6;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+}
+
+.signal {
+    display: flex;
+    place-content: center;
+    font-size: 2em;
+    color: white;
+    height: fit-content;
+    padding: 16px;
+    border-radius: 16px;
+}
+
+.buy {
+    background-color: green;
+}
+
+.sell {
+    background-color: red;
+}
+
+.data {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+}

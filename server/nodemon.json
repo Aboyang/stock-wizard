@@ -1,4 +1,4 @@
 {
-    "watch": ["app.js", "routes/", "services/"],
+    "watch": ["app.js", "routes/", "controllers/", "services/", "helpers/"],
     "ignore": ["client.js"]
 }

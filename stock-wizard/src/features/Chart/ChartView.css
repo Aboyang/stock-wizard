@@ -1,0 +1,89 @@
+.chart-area {
+    background-color: #f6f6f6;
+    width: 100%;
+    height: 620px;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 80%;
+    height: 80%;
+    font-size: 2em;
+    border-radius: 16px;
+    position: relative;
+}
+
+.no-data::after {
+    content: "";
+    border: 5px solid #bebebe; /* Light gray */
+    border-top: 5px solid white; /* spinner color */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    position: absolute;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+.horizontal-display {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.vertical-display {
+    width: 50%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    gap: 20px;
+}
+
+.window {
+    background-color: #f6f6f6;
+    width: 100%;
+    height: fit-content;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.option {
+    background-color: white;
+    width: 200px;
+    height: fit-content;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.16);
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shade {
+    background-color: #dbdbdb;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
