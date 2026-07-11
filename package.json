@@ -2,7 +2,7 @@
   "name": "stock-wizard",
   "private": true,
   "scripts": {
-    "dev": "concurrently -n frontend,server -c cyan,magenta \"npm --prefix frontend run dev\" \"npm --prefix server run dev\"",
+    "dev": "concurrently -n redis,server,frontend -c yellow,magenta,cyan \"redis-server --port 6380\" \"npm --prefix server run dev\" \"npm --prefix frontend run dev\"",
     "build": "npm --prefix frontend run build",
     "lint": "npm --prefix frontend run lint",
     "install:all": "npm install && npm --prefix frontend install && npm --prefix server install"

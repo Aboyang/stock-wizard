@@ -1,0 +1,100 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: ./frontend
+      - name: Run lint check
+        run: npm run lint
+        working-directory: ./frontend
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./frontend
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: ./server
+      - name: Smoke check server boots
+        run: node --check app.js
+        working-directory: ./server
+
+  deploy-frontend:
+    needs: [test-frontend, test-backend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      - name: Deploy to Vercel
+        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+        working-directory: ./frontend
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  deploy-backend:
+    needs: [test-frontend, test-backend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-1
+      - name: Package server bundle
+        run: zip -r ../server-${{ github.sha }}.zip . -x "node_modules/*" ".env" ".env.*"
+        working-directory: ./server
+      - name: Upload bundle to S3
+        run: aws s3 cp server-${{ github.sha }}.zip s3://${{ secrets.EB_S3_BUCKET }}/server-${{ github.sha }}.zip
+      - name: Create EB application version
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name ${{ secrets.EB_APP_NAME }} \
+            --version-label ${{ github.sha }} \
+            --source-bundle S3Bucket=${{ secrets.EB_S3_BUCKET }},S3Key=server-${{ github.sha }}.zip \
+            --auto-create-application
+      - name: Deploy new version
+        run: |
+          aws elasticbeanstalk update-environment \
+            --application-name ${{ secrets.EB_APP_NAME }} \
+            --environment-name ${{ secrets.EB_ENV_NAME }} \
+            --version-label ${{ github.sha }}
+      - name: Wait for environment to stabilise
+        run: |
+          aws elasticbeanstalk wait environment-updated \
+            --application-name ${{ secrets.EB_APP_NAME }} \
+            --environment-names ${{ secrets.EB_ENV_NAME }}
