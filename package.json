@@ -5,6 +5,7 @@
     "dev": "concurrently -n redis,server,frontend -c yellow,magenta,cyan \"redis-server --port 6380\" \"npm --prefix server run dev\" \"npm --prefix frontend run dev\"",
     "build": "npm --prefix frontend run build",
     "lint": "npm --prefix frontend run lint",
+    "typecheck": "npm --prefix frontend run typecheck && npm --prefix server run typecheck",
     "install:all": "npm install && npm --prefix frontend install && npm --prefix server install"
   },
   "devDependencies": {
