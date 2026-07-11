@@ -1,6 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 
-const initialState = {
+export interface ISecurityState {
+    symbols: string[]
+    selectedSec: string
+}
+
+const initialState: ISecurityState = {
     symbols: ['TSLA'],
     selectedSec: '',
 }
@@ -12,15 +18,15 @@ const securitySlice = createSlice({
 
     reducers: {
 
-        addSymbol: (state, action) => {
+        addSymbol: (state, action: PayloadAction<string>) => {
             state.symbols.push(action.payload)
         },
 
-        removeSec: (state, action) => {
+        removeSec: (state, action: PayloadAction<{ symbol: string; index: number }>) => {
             state.symbols.splice(action.payload.index, 1)
         },
 
-        selectSec: (state, action) => {
+        selectSec: (state, action: PayloadAction<string>) => {
             state.selectedSec = action.payload
         }
     },

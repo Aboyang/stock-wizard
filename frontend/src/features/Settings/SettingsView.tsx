@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 
+import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { addSymbol } from "../securitySlice"
 import "./SettingsView.css"
 
@@ -16,25 +16,38 @@ const SUGGESTED_THEMES = [
     "Emerging Markets", "Crypto", "Consumer", "Aerospace", "Robotics",
 ]
 
-const DEFAULTS = {
+export interface IPreferences {
+    riskAppetite: number
+    returnGoal: number
+    timeHorizon: number
+    themes: string[]
+}
+
+interface IRecommendedTicker {
+    symbol: string
+    allocation: number | null
+}
+
+const DEFAULTS: IPreferences = {
     riskAppetite: 5,
     returnGoal: 10,
     timeHorizon: 5,
     themes: [],
 }
 
-function loadPreferences() {
+function loadPreferences(): IPreferences {
     try {
         const raw = localStorage.getItem(STORAGE_KEY)
         if (raw === null) return DEFAULTS
-        const parsed = JSON.parse(raw)
+        const parsed: unknown = JSON.parse(raw)
+        if (typeof parsed !== "object" || parsed === null) return DEFAULTS
         return { ...DEFAULTS, ...parsed }
     } catch {
         return DEFAULTS
     }
 }
 
-function prefsEqual(a, b) {
+function prefsEqual(a: IPreferences, b: IPreferences): boolean {
     if (a.riskAppetite !== b.riskAppetite) return false
     if (a.returnGoal !== b.returnGoal) return false
     if (a.timeHorizon !== b.timeHorizon) return false
@@ -43,7 +56,7 @@ function prefsEqual(a, b) {
     return a.themes.every((t) => setB.has(t))
 }
 
-function splitAtSentinel(buffer) {
+function splitAtSentinel(buffer: string): { markdown: string; tail: string } {
     const idx = buffer.indexOf(TICKER_SENTINEL)
     if (idx === -1) return { markdown: buffer, tail: "" }
     return {
@@ -52,24 +65,28 @@ function splitAtSentinel(buffer) {
     }
 }
 
-function parseTickers(tail) {
+function parseTickers(tail: string): IRecommendedTicker[] {
     if (!tail) return []
     try {
-        const parsed = JSON.parse(tail)
-        const list = Array.isArray(parsed?.tickers) ? parsed.tickers : []
+        const parsed: unknown = JSON.parse(tail)
+        const tickers = (parsed as { tickers?: unknown })?.tickers
+        const list: unknown[] = Array.isArray(tickers) ? tickers : []
         return list
-            .map((t) =>
+            .map((t): { symbol: unknown; allocation: unknown } =>
                 typeof t === "string"
                     ? { symbol: t, allocation: null }
-                    : { symbol: t?.symbol, allocation: t?.allocation ?? null }
+                    : {
+                        symbol: (t as { symbol?: unknown })?.symbol,
+                        allocation: (t as { allocation?: unknown })?.allocation ?? null,
+                    }
             )
-            .filter((t) => typeof t.symbol === "string" && t.symbol.length)
+            .filter((t): t is IRecommendedTicker => typeof t.symbol === "string" && t.symbol.length > 0)
     } catch {
         return []
     }
 }
 
-async function streamAdvisor(prefs, onChunk) {
+async function streamAdvisor(prefs: IPreferences, onChunk: (buffer: string) => void): Promise<string> {
     const baseUrl = import.meta.env.PROD ? "" : "http://localhost:5001"
     const res = await fetch(`${baseUrl}/api/advisor/stream`, {
         method: "POST",
@@ -94,20 +111,20 @@ async function streamAdvisor(prefs, onChunk) {
 }
 
 function SettingsView() {
-    const dispatch = useDispatch()
-    const watchlist = useSelector((s) => s.security.symbols)
+    const dispatch = useAppDispatch()
+    const watchlist = useAppSelector((s) => s.security.symbols)
     const watchlistSet = useMemo(
         () => new Set(watchlist.map((s) => s.toUpperCase())),
         [watchlist]
     )
 
     const [open, setOpen] = useState(false)
-    const [savedPrefs, setSavedPrefs] = useState(loadPreferences)
-    const [draftPrefs, setDraftPrefs] = useState(savedPrefs)
+    const [savedPrefs, setSavedPrefs] = useState<IPreferences>(loadPreferences)
+    const [draftPrefs, setDraftPrefs] = useState<IPreferences>(savedPrefs)
 
     const [analysing, setAnalysing] = useState(false)
     const [streamBuffer, setStreamBuffer] = useState("")
-    const [addedTickers, setAddedTickers] = useState(() => new Set())
+    const [addedTickers, setAddedTickers] = useState<Set<string>>(() => new Set())
 
     const abortRef = useRef(false)
 
@@ -119,11 +136,11 @@ function SettingsView() {
     const tickers = useMemo(() => parseTickers(tail), [tail])
     const streamingComplete = !analysing && streamBuffer.length > 0
 
-    function update(key, value) {
+    function update<K extends keyof IPreferences>(key: K, value: IPreferences[K]) {
         setDraftPrefs((p) => ({ ...p, [key]: value }))
     }
 
-    function toggleTheme(theme) {
+    function toggleTheme(theme: string) {
         setDraftPrefs((p) => ({
             ...p,
             themes: p.themes.includes(theme)
@@ -151,13 +168,14 @@ function SettingsView() {
                 setStreamBuffer(buf)
             })
         } catch (err) {
-            setStreamBuffer((b) => b + `\n\n_Error: ${err.message}_`)
+            const message = err instanceof Error ? err.message : String(err)
+            setStreamBuffer((b) => b + `\n\n_Error: ${message}_`)
         } finally {
             setAnalysing(false)
         }
     }
 
-    function handleAddTicker(symbol) {
+    function handleAddTicker(symbol: string) {
         const upper = symbol.toUpperCase()
         if (watchlistSet.has(upper)) return
         dispatch(addSymbol(upper))

@@ -1,13 +1,15 @@
-import { useSelector } from 'react-redux'
 import { useQueries } from '@tanstack/react-query'
+import { useAppSelector } from '../../app/hooks'
 
 import { Chart as ChartJS, CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
+import type { ChartData, ChartOptions } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import annotationPlugin from 'chartjs-plugin-annotation'
 import 'chartjs-adapter-luxon'
 
 import { chartQueryOptions } from '../Card/query'
+import type { IPricePoint } from '../Card/query'
 
 import './ChartView.css'
 import MAView from './MAView'
@@ -20,8 +22,8 @@ function ChartView() {
 
     ChartJS.register(CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, annotationPlugin)
 
-    const { symbols, selectedSec } = useSelector((state) => state.security)
-    const { start, end, interval } = useSelector((state) => state.form)
+    const { symbols, selectedSec } = useAppSelector((state) => state.security)
+    const { start, end, interval } = useAppSelector((state) => state.form)
 
     const displaySymbols = selectedSec !== "" ? [selectedSec] : symbols
 
@@ -37,9 +39,9 @@ function ChartView() {
         tension: 0,
     }))
 
-    const data = { datasets }
+    const data: ChartData<'line', IPricePoint[]> = { datasets }
 
-    const options = {
+    const options: ChartOptions<'line'> = {
         responsive: true,
         aspectRatio: 2.5,
         plugins: {

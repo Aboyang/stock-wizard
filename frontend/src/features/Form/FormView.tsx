@@ -1,7 +1,8 @@
-import { useSelector, useDispatch } from "react-redux"
 import { useState } from "react"
+import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { addSymbol } from "../securitySlice"
 import { changeTimeframe } from "./formSlice"
+import type { TTimeframe } from "./formSlice"
 import { useGetSuggestions } from "./query"
 
 import './FormView.css'
@@ -10,13 +11,13 @@ function FormView() {
 
     const [symbol, setSymbol] = useState('')
 
-    const { symbols } = useSelector((state) => state.security)
-    const { timeframe } = useSelector((state) => state.form)
-    const dispatch = useDispatch()
+    const { symbols } = useAppSelector((state) => state.security)
+    const { timeframe } = useAppSelector((state) => state.form)
+    const dispatch = useAppDispatch()
 
     const { data: suggestion = [] } = useGetSuggestions(symbol)
 
-    function handleAddSec(symb) {
+    function handleAddSec(symb: string) {
         if (symbols.includes(symb)) return
         dispatch(addSymbol(symb))
         setSymbol('')
@@ -45,7 +46,7 @@ function FormView() {
                 </div>
             )}
 
-            <select className="menu" value={timeframe || ""} onChange={(e) => dispatch(changeTimeframe(e.target.value))}>
+            <select className="menu" value={timeframe || ""} onChange={(e) => dispatch(changeTimeframe(e.target.value as TTimeframe))}>
                 <option value="1m">1 Month</option>
                 <option value="3m">3 Months</option>
                 <option value="6m">6 Months</option>

@@ -1,10 +1,11 @@
-import { useSelector } from "react-redux"
+import { useAppSelector } from "../../app/hooks"
 
 import { useGetNews, useGetNewsInsights } from "./query"
+import type { INewsInsight } from "./query"
 
 import "./NewsView.css"
 
-function formatRelativeTime(value) {
+function formatRelativeTime(value: string | Date | null | undefined): string {
     if (!value) return ""
     const ms = value instanceof Date ? value.getTime() : new Date(value).getTime()
     if (Number.isNaN(ms)) return ""
@@ -20,7 +21,15 @@ function formatRelativeTime(value) {
     return `${months}mo ago`
 }
 
-function InsightField({ label, value, pending, lines = 2, variant }) {
+interface IInsightFieldProps {
+    label: string
+    value: string | undefined
+    pending: boolean
+    lines?: number
+    variant?: "recommendation"
+}
+
+function InsightField({ label, value, pending, lines = 2, variant }: IInsightFieldProps) {
     const sectionClass = `news-section${variant === "recommendation" ? " news-recommendation" : ""}`
 
     return (
@@ -41,11 +50,11 @@ function InsightField({ label, value, pending, lines = 2, variant }) {
 }
 
 function NewsView() {
-    const selectedSec = useSelector((state) => state.security.selectedSec)
+    const selectedSec = useAppSelector((state) => state.security.selectedSec)
     const { data: news, isLoading } = useGetNews(selectedSec)
     const { data: insights, isLoading: insightsLoading } = useGetNewsInsights(selectedSec, { enabled: !!news })
 
-    const insightFor = (uuid) => insights?.find(i => i.uuid === uuid) || null
+    const insightFor = (uuid: string): INewsInsight | null => insights?.find(i => i.uuid === uuid) || null
 
     return (
         <div className="news-area">

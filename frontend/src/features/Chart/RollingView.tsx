@@ -1,7 +1,8 @@
-import { useSelector } from 'react-redux'
 import { useState } from 'react'
+import { useAppSelector } from '../../app/hooks'
 
 import { Chart as ChartJS, CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
+import type { ChartDataset } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import annotationPlugin from 'chartjs-plugin-annotation'
@@ -10,6 +11,7 @@ import 'chartjs-adapter-luxon'
 import '../Modal/Modal.css'
 import Modal from '../Modal/Modal'
 import { useGetRollingStats } from './query'
+import type { IRatePoint } from './query'
 
 import './RollingView.css'
 
@@ -17,7 +19,7 @@ function RollingView() {
 
     ChartJS.register(CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, annotationPlugin)
 
-    const selectedSec = useSelector((state) => state.security.selectedSec)
+    const selectedSec = useAppSelector((state) => state.security.selectedSec)
     const [window, setWindow] = useState(10)
 
     const [momentumModal, setMomentumModal] = useState(false)
@@ -27,7 +29,7 @@ function RollingView() {
 
     if (!rollingData) return null
 
-    const datasets = [
+    const datasets: ChartDataset<'line', IRatePoint[]>[] = [
         {
             label: "Rolling Return",
             data: rollingData.rollingReturn,
@@ -59,9 +61,9 @@ function RollingView() {
                         title: { display: true, text: "Rolling Analytics" },
                         legend: { position: "bottom" },
                         zoom: {
-                            pan: { enabled: true, mode: "x", speed: 0.005, threshold: 50 },
+                            pan: { enabled: true, mode: "x", threshold: 50 },
                             zoom: {
-                                wheel: { enabled: true, speed: 0.005, threshold: 50 },
+                                wheel: { enabled: true, speed: 0.005 },
                                 pinch: { enabled: false },
                                 mode: "x"
                             }

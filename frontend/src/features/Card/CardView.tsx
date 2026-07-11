@@ -1,24 +1,37 @@
-import { useSelector, useDispatch } from "react-redux"
 import { useRef } from "react"
+import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { removeSec, selectSec } from "../securitySlice"
 import { mean, standardDeviation } from "simple-statistics"
 import { useGetChart } from "./query"
 
 import "./CardView.css"
 
-function CardView( { symbol, index, isEditMode, enterEditMode }) {
+interface ICardViewProps {
+    symbol: string
+    index: number
+    isEditMode: boolean
+    enterEditMode: () => void
+}
 
-    const selectedSec = useSelector((state) => state.security.selectedSec)
-    const interval = useSelector((state) => state.form.interval)
-    const dispatch = useDispatch()
+interface ICardMetrics {
+    annualReturn: number
+    annualVolatility: number
+    sharpe: number
+}
+
+function CardView({ symbol, index, isEditMode, enterEditMode }: ICardViewProps) {
+
+    const selectedSec = useAppSelector((state) => state.security.selectedSec)
+    const interval = useAppSelector((state) => state.form.interval)
+    const dispatch = useAppDispatch()
 
     const { data: priceData, isLoading } = useGetChart(symbol)
 
-    const longPressTimer = useRef(null)
+    const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
     const pointerStart = useRef({ x: 0, y: 0 })
     const movedTooMuch = useRef(false)
 
-    function handlePointerDown(e) {
+    function handlePointerDown(e: React.PointerEvent<HTMLDivElement>) {
         movedTooMuch.current = false
         pointerStart.current = { x: e.clientX, y: e.clientY }
         longPressTimer.current = setTimeout(() => {
@@ -27,7 +40,7 @@ function CardView( { symbol, index, isEditMode, enterEditMode }) {
         }, 500)
     }
 
-    function handlePointerMove(e) {
+    function handlePointerMove(e: React.PointerEvent<HTMLDivElement>) {
         const dx = e.clientX - pointerStart.current.x
         const dy = e.clientY - pointerStart.current.y
         if (dx * dx + dy * dy > 64) {
@@ -52,18 +65,14 @@ function CardView( { symbol, index, isEditMode, enterEditMode }) {
         dispatch(selectSec(selectedSec === "" || selectedSec !== symbol ? symbol : ""))
     }
 
-    function handleRemove(e) {
+    function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {
         e.stopPropagation()
         dispatch(removeSec({ symbol, index }))
     }
 
-    let annualReturn = "-"
-    let annualVolatility = "-"
-    let sharpe = "-"
+    let metrics: ICardMetrics | null = null
 
-    const dataLoaded = !!priceData && priceData.length > 0
-
-    if (dataLoaded) {
+    if (priceData && priceData.length > 0) {
 
         let scale = 0
         switch (interval) {
@@ -80,14 +89,15 @@ function CardView( { symbol, index, isEditMode, enterEditMode }) {
 
         const prices = priceData.map(data => data.price)
 
-        let percentChange = []
+        const percentChange: number[] = []
         for (let i = 1; i < prices.length; i ++) {
             percentChange.push((prices[i] / prices[i - 1] - 1))
         }
 
-        annualReturn = mean(percentChange) * scale
-        annualVolatility = standardDeviation(percentChange) * Math.sqrt(scale)
-        sharpe = (annualReturn - 0.04) / annualVolatility
+        const annualReturn = mean(percentChange) * scale
+        const annualVolatility = standardDeviation(percentChange) * Math.sqrt(scale)
+        const sharpe = (annualReturn - 0.04) / annualVolatility
+        metrics = { annualReturn, annualVolatility, sharpe }
     }
 
     const cardClass =
@@ -114,7 +124,7 @@ function CardView( { symbol, index, isEditMode, enterEditMode }) {
 
             <div className="symbol">{symbol}</div>
 
-            {!dataLoaded ? (
+            {!metrics ? (
                 <button className="loading-button" disabled>{isLoading ? "Loading..." : "No data"}</button>
             ) : (
                 <>
@@ -122,14 +132,14 @@ function CardView( { symbol, index, isEditMode, enterEditMode }) {
                     <div className="label">Return</div>:
                     <div
                         className={
-                        annualReturn < 0
+                        metrics.annualReturn < 0
                             ? "value red"
-                            : annualReturn < 0.05
+                            : metrics.annualReturn < 0.05
                             ? "value orange"
                             : "value green"
                         }
                     >
-                        {(annualReturn * 100).toFixed(2)}%
+                        {(metrics.annualReturn * 100).toFixed(2)}%
                     </div>
                     </div>
 
@@ -137,14 +147,14 @@ function CardView( { symbol, index, isEditMode, enterEditMode }) {
                     <div className="label">Volatility</div>:
                     <div
                         className={
-                        annualVolatility < 0.1
+                        metrics.annualVolatility < 0.1
                             ? "value green"
-                            : annualVolatility < 0.3
+                            : metrics.annualVolatility < 0.3
                             ? "value orange"
                             : "value red"
                         }
                     >
-                        {(annualVolatility * 100).toFixed(2)}%
+                        {(metrics.annualVolatility * 100).toFixed(2)}%
                     </div>
                     </div>
 
@@ -152,14 +162,14 @@ function CardView( { symbol, index, isEditMode, enterEditMode }) {
                     <div className="label">Sharpe</div>:
                     <div
                         className={
-                        sharpe < 0
+                        metrics.sharpe < 0
                             ? "value red"
-                            : sharpe < 1
+                            : metrics.sharpe < 1
                             ? "value orange"
                             : "value green"
                         }
                     >
-                        {sharpe.toFixed(2)}
+                        {metrics.sharpe.toFixed(2)}
                     </div>
                     </div>
 

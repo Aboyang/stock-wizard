@@ -1,10 +1,12 @@
-import { useSelector } from 'react-redux'
 import { useState } from 'react'
+import { useAppSelector } from '../../app/hooks'
 
 import { Chart as ChartJS, CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
+import type { ChartDataset } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import annotationPlugin from 'chartjs-plugin-annotation'
+import type { AnnotationOptions } from 'chartjs-plugin-annotation'
 import 'chartjs-adapter-luxon'
 
 import './MAView.css'
@@ -12,12 +14,13 @@ import './MAView.css'
 import Modal from '../Modal/Modal'
 import '../Modal/Modal.css'
 import { useGetMovingAverage } from './query'
+import type { IPricePoint } from '../Card/query'
 
 function MAView() {
 
     ChartJS.register(CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, annotationPlugin)
 
-    const selectedSec = useSelector((state) => state.security.selectedSec)
+    const selectedSec = useAppSelector((state) => state.security.selectedSec)
     const [window, setWindow] = useState(5)
     const [showModal, setShowModal] = useState(false)
 
@@ -27,7 +30,7 @@ function MAView() {
 
     const { fastMA, slowMA, crossover } = movingAvgData
 
-    const datasets = [
+    const datasets: ChartDataset<'line', IPricePoint[]>[] = [
         {
             label: `${window}-Day Moving Average`,
             data: fastMA,
@@ -44,8 +47,8 @@ function MAView() {
         }
     ]
 
-    const annotations = Object.fromEntries(
-        crossover.map((d, index) => [
+    const annotations: Record<string, AnnotationOptions> = Object.fromEntries(
+        crossover.map((d, index): [string, AnnotationOptions] => [
             `label${index + 1}`,
             {
                 type: 'label',
@@ -78,9 +81,9 @@ function MAView() {
                             title: { display: true, text: "Moving Averages" },
                             legend: { position: "bottom" },
                             zoom: {
-                                pan: { enabled: true, mode: "x", speed: 0.005, threshold: 50 },
+                                pan: { enabled: true, mode: "x", threshold: 50 },
                                 zoom: {
-                                    wheel: { enabled: true, speed: 0.005, threshold: 50 },
+                                    wheel: { enabled: true, speed: 0.005 },
                                     pinch: { enabled: false },
                                     mode: "x"
                                 }

@@ -5,19 +5,19 @@ import formReducer from "../features/Form/formSlice"
 
 const STORAGE_KEY = "stockWizard:symbols"
 
-function loadSymbols() {
+function loadSymbols(): string[] | undefined {
     try {
         const raw = localStorage.getItem(STORAGE_KEY)
         if (raw === null) return undefined
-        const parsed = JSON.parse(raw)
+        const parsed: unknown = JSON.parse(raw)
         if (!Array.isArray(parsed)) return undefined
-        return parsed.filter((s) => typeof s === "string")
+        return parsed.filter((s): s is string => typeof s === "string")
     } catch {
         return undefined
     }
 }
 
-function saveSymbols(symbols) {
+function saveSymbols(symbols: string[]): void {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(symbols))
     } catch {
@@ -41,6 +41,9 @@ const store = configureStore({
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)
 
 })
+
+export type TRootState = ReturnType<typeof store.getState>
+export type TAppDispatch = typeof store.dispatch
 
 let lastSymbols = store.getState().security.symbols
 store.subscribe(() => {

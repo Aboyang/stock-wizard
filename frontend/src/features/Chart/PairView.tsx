@@ -1,22 +1,30 @@
-import { useSelector } from "react-redux"
+import { useAppSelector } from "../../app/hooks"
 
 import { Chart as ChartJS, CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js'
+import type { ChartDataset } from 'chart.js'
 import { Line } from 'react-chartjs-2'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import annotationPlugin from 'chartjs-plugin-annotation'
+import type { AnnotationOptions } from 'chartjs-plugin-annotation'
 import 'chartjs-adapter-luxon'
 
 import '../Chart/ChartView.css'
 import './PairView.css'
 
 import { useGetChart } from '../Card/query'
+import type { IPricePoint } from '../Card/query'
 import { useGetMeanReversion } from './query'
+
+interface ISpreadPoint {
+    priceSpread: number
+    dist: number
+}
 
 function PairView() {
 
     ChartJS.register(CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Title, Tooltip, Legend, zoomPlugin, annotationPlugin)
 
-    const selectedSec = useSelector(state => state.security.selectedSec)
+    const selectedSec = useAppSelector(state => state.security.selectedSec)
 
     const { data: targetChart } = useGetChart(selectedSec)
     const { data: meanReversionData, isLoading } = useGetMeanReversion(selectedSec)
@@ -25,9 +33,9 @@ function PairView() {
         return <div className="loading">Loading mean-reversion data...</div>
     }
 
-    const { bestCorrelated = {}, signals = [], normal = {} } = meanReversionData
+    const { bestCorrelated, signals, normal } = meanReversionData
 
-    const getPairData = () => [
+    const getPairData = (): ChartDataset<'line', IPricePoint[]>[] => [
         {
             label: bestCorrelated.symbol || "-",
             data: bestCorrelated.dataPoints || [],
@@ -44,13 +52,13 @@ function PairView() {
         }
     ]
 
-    const getSignal = () => Object.fromEntries(
-        signals.map((data, index) => [
+    const getSignal = (): Record<string, AnnotationOptions> => Object.fromEntries(
+        signals.map((data, index): [string, AnnotationOptions] => [
             `label${index + 1}`,
             {
                 type: 'label',
                 xValue: data.date,
-                yValue: data.price,
+                yValue: data.priceTarget,
                 content: [
                     data.action,
                     `Spread: ${data.priceSpread?.toFixed(2)}`,
@@ -68,26 +76,26 @@ function PairView() {
         ])
     )
 
-    const getLatestSignal = () => signals.length > 0 ? [...signals].reverse()[0] : {}
+    const latestSignal = signals.length > 0 ? [...signals].reverse()[0] : null
 
-    const getNormalDist = () => {
+    const getNormalDist = (): ChartDataset<'line', ISpreadPoint[]>[] => {
         if (!normal.priceSpread) return []
         const { priceSpread, meanPriceSpread, sdPriceSpread } = normal
-        const normalPDF = (x, mean, sd) => (1 / (sd * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / sd, 2))
+        const normalPDF = (x: number, mean: number, sd: number): number => (1 / (sd * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - mean) / sd, 2))
 
         const distributions = [...priceSpread].sort((a, b) => a - b).map(x => ({ priceSpread: x, dist: normalPDF(x, meanPriceSpread, sdPriceSpread) }))
 
         return [{ data: distributions, parsing: { xAxisKey: "priceSpread", yAxisKey: "dist" }, borderColor: "black", tension: 0 }]
     }
 
-    const getSpreadData = () => {
+    const getSpreadData = (): ChartDataset<'line', { date: string | undefined; price: number }[]>[] => {
         if (!normal.priceSpread || !targetChart) return []
         const { priceSpread } = normal
         const priceSpreadTimeSeries = priceSpread.map((p, i) => ({ date: targetChart[i]?.date, price: p }))
         return [{ data: priceSpreadTimeSeries, parsing: { xAxisKey: "date", yAxisKey: "price" }, borderColor: "black", tension: 0 }]
     }
 
-    const getLatestSpread = () => normal.priceSpread ? [...normal.priceSpread].reverse()[0] : 0
+    const latestSpread = normal.priceSpread && normal.priceSpread.length > 0 ? [...normal.priceSpread].reverse()[0] : null
 
     return (
         <div className="horizontal-display">
@@ -138,7 +146,7 @@ function PairView() {
                             scales: { x: { type: "time", ticks: { maxTicksLimit: 8 }, min: new Date(Date.now() - 2592000000 * 3).toISOString(), max: new Date().toISOString() } }
                         }}
                     />
-                    <div>Latest Spread: {getLatestSpread()?.toFixed(2)}</div>
+                    <div>Latest Spread: {latestSpread?.toFixed(2)}</div>
                 </div>
 
             </div>
@@ -154,35 +162,35 @@ function PairView() {
                         plugins: {
                             title: { display: true, text: "Pair Trading" },
                             legend: { position: "bottom" },
-                            zoom: { pan: { enabled: true, mode: "x", speed: 0.005, threshold: 50 }, zoom: { wheel: { enabled: true, speed: 0.005, threshold: 50 }, pinch: { enabled: false }, mode: "x" } },
+                            zoom: { pan: { enabled: true, mode: "x", threshold: 50 }, zoom: { wheel: { enabled: true, speed: 0.005 }, pinch: { enabled: false }, mode: "x" } },
                             annotation: { annotations: getSignal() }
                         },
                         scales: { x: { type: "time", ticks: { maxTicksLimit: 10 }, min: new Date(Date.now() - 2592000000 * 3).toISOString(), max: new Date().toISOString() } }
                     }}
                 />
-                {getLatestSignal()?.action && (
+                {latestSignal && (
                     <div className="latest-action">
                         <div className="card-content">
-                            <div className={getLatestSignal().action === "E" ? "signal exit" : "signal enter"}>
+                            <div className={latestSignal.action === "E" ? "signal exit" : "signal enter"}>
                                 {
-                                    getLatestSignal().action === "E" ? "Exit" :
-                                        getLatestSignal().action === "S-L" ? `Short ${selectedSec}, Long ${bestCorrelated.symbol}` :
+                                    latestSignal.action === "E" ? "Exit" :
+                                        latestSignal.action === "S-L" ? `Short ${selectedSec}, Long ${bestCorrelated.symbol}` :
                                             `Long ${selectedSec}, Short ${bestCorrelated.symbol}`
                                 }
                             </div>
                             <div className="data">
                                 <div>
-                                    {getLatestSignal().action === "E" ? "A pair trading opportunity has ended on " : "This pair trading opportunity was identified on "}
-                                    <strong>{getLatestSignal().date?.split('T')[0]}</strong>.
+                                    {latestSignal.action === "E" ? "A pair trading opportunity has ended on " : "This pair trading opportunity was identified on "}
+                                    <strong>{latestSignal.date?.split('T')[0]}</strong>.
                                 </div>
                                 <div>
                                     {`${selectedSec} was trading at a price of `}
-                                    <strong>{getLatestSignal().priceTarget?.toFixed(2)}</strong>
+                                    <strong>{latestSignal.priceTarget?.toFixed(2)}</strong>
                                     {`; ${bestCorrelated.symbol} was trading at a price of `}
-                                    <strong>{getLatestSignal().pricePair?.toFixed(2)}</strong>.
+                                    <strong>{latestSignal.pricePair?.toFixed(2)}</strong>.
                                 </div>
                                 <div>
-                                    {getLatestSignal().action === "E" ? "Don't enter the trade until the next signal." : "The signal is still active because the spread has not yet reverted to the mean."}
+                                    {latestSignal.action === "E" ? "Don't enter the trade until the next signal." : "The signal is still active because the spread has not yet reverted to the mean."}
                                 </div>
                             </div>
                         </div>

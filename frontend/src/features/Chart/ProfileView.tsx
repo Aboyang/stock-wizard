@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
+import type { ReactNode } from "react"
+import { useAppSelector } from "../../app/hooks"
 
 import { useGetProfile, useGetFinancials } from "./query"
+import type { IFinancials } from "./query"
 
 import "./ProfileView.css"
 
-function Chip({ label, value }) {
+function Chip({ label, value }: { label: string; value: string | null | undefined }) {
     if (!value) return null
     return (
         <div className="profile-chip">
@@ -15,7 +17,7 @@ function Chip({ label, value }) {
     )
 }
 
-function formatBig(n) {
+function formatBig(n: number | null | undefined): string {
     if (n == null || Number.isNaN(n)) return "—"
     const abs = Math.abs(n)
     if (abs >= 1e12) return `$${(n / 1e12).toFixed(2)}T`
@@ -25,31 +27,36 @@ function formatBig(n) {
     return `$${n.toFixed(2)}`
 }
 
-function formatPrice(n) {
+function formatPrice(n: number | null | undefined): string {
     if (n == null || Number.isNaN(n)) return "—"
     return `$${n.toFixed(2)}`
 }
 
-function formatNumber(n) {
+function formatNumber(n: number | null | undefined): string {
     if (n == null || Number.isNaN(n)) return "—"
     return n.toFixed(2)
 }
 
-function formatDate(d) {
+function formatDate(d: string | Date | null | undefined): string {
     if (!d) return "—"
     const date = d instanceof Date ? d : new Date(d)
     if (Number.isNaN(date.getTime())) return "—"
     return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
 }
 
-function formatYoY(n) {
+function formatYoY(n: number | null | undefined): string | null {
     if (n == null || Number.isNaN(n)) return null
     const pct = n * 100
     const sign = pct >= 0 ? "+" : ""
     return `${sign}${pct.toFixed(1)}% YoY`
 }
 
-function sortEvents(financials) {
+interface IUpcomingEvent {
+    label: string
+    value: ReactNode
+}
+
+function sortEvents(financials: IFinancials): IUpcomingEvent[] {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const todayMs = today.getTime()
@@ -70,7 +77,14 @@ function sortEvents(financials) {
         }))
 }
 
-function StatCard({ label, value, compare, yoy }) {
+interface IStatCardProps {
+    label: string
+    value: string
+    compare?: string | null
+    yoy?: number | null
+}
+
+function StatCard({ label, value, compare, yoy }: IStatCardProps) {
     const yoyText = formatYoY(yoy)
     const yoyClass = yoy == null ? "" : yoy >= 0 ? " fin-stat-yoy-up" : " fin-stat-yoy-down"
     return (
@@ -84,7 +98,7 @@ function StatCard({ label, value, compare, yoy }) {
 }
 
 function ProfileView() {
-    const selectedSec = useSelector((state) => state.security.selectedSec)
+    const selectedSec = useAppSelector((state) => state.security.selectedSec)
     const { data: profile, isLoading } = useGetProfile(selectedSec)
     const { data: financials, isLoading: finLoading } = useGetFinancials(selectedSec)
     const [expanded, setExpanded] = useState(false)
