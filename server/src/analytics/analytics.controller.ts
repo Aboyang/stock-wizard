@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import { calcRollingStats, calcMovingAvg, calcMeanReversion } from "./analytics.helper.js"
+import { calcRollingStats, calcMovingAvg, calcRSI, calcMeanReversion } from "./analytics.helper.js"
 import type { IDataPoint } from "./analytics.helper.js"
 import { gatherMeanReversionInputs } from "./analytics.service.js"
 import type { TChartInterval } from "../security/chart/chart.service.js"
@@ -39,6 +39,19 @@ export function postMovingAverage(req: Request<unknown, unknown, IWindowedStatsB
     }
 
     const result = calcMovingAvg(dataPoints, window)
+    res.json(result)
+}
+
+// relative strength index
+export function postRSI(req: Request<unknown, unknown, IWindowedStatsBody>, res: Response): void {
+    const { dataPoints, window } = req.body
+
+    if (!dataPoints || !window) {
+        res.status(400).send("Invalid input")
+        return
+    }
+
+    const result = calcRSI(dataPoints, window)
     res.json(result)
 }
 

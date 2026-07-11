@@ -32,6 +32,14 @@ export interface IMovingAverageResult {
     crossover: ICrossoverPoint[]
 }
 
+export type TRSISignal = "overbought" | "oversold" | "neutral"
+
+export interface IRSIResult {
+    rsi: IRatePoint[]
+    latestRSI: number
+    signal: TRSISignal
+}
+
 export interface IBestCorrelated {
     symbol: string
     dataPoints: IPricePoint[]
@@ -126,6 +134,17 @@ export function useGetMovingAverage(symbol: string, window: number) {
     return useQuery({
         queryKey: ["moving-average", symbol, start, end, interval, window],
         queryFn: () => apiPost<IMovingAverageResult>("/api/analytics/moving-average", { dataPoints: chart.data, window }),
+        enabled: !!chart.data && !!window,
+    })
+}
+
+export function useGetRSI(symbol: string, window: number) {
+    const chart = useGetChart(symbol)
+    const { start, end, interval } = useAppSelector((state) => state.form)
+
+    return useQuery({
+        queryKey: ["rsi", symbol, start, end, interval, window],
+        queryFn: () => apiPost<IRSIResult>("/api/analytics/rsi", { dataPoints: chart.data, window }),
         enabled: !!chart.data && !!window,
     })
 }
