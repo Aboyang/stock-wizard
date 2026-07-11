@@ -1,9 +1,9 @@
 import "dotenv/config"
 import express from "express"
 import cors from "cors"
-import securityRouter from "./routes/security.js"
-import analyticsRouter from "./routes/analytics.js"
-import advisorRouter from "./routes/advisor.js"
+import securityRouter from "./security/route.js"
+import analyticsRouter from "./analytics/route.js"
+import advisorRouter from "./advisor/route.js"
 
 const app = express()
 

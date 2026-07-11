@@ -1,7 +1,7 @@
 import { Router } from "express"
-import { postRollingStats, postMovingAverage, postMeanReversion } from "../controllers/analyticsController.js"
+import { postRollingStats, postMovingAverage, postMeanReversion } from "./analytics.controller.js"
 
-const router = Router()
+const router: Router = Router()
 
 router.post("/rolling-stats", postRollingStats)
 router.post("/moving-average", postMovingAverage)

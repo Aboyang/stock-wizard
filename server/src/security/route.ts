@@ -1,7 +1,7 @@
 import { Router } from "express"
-import { getChart, getSuggestions, getRecommendationsCtrl, getNews, getNewsInsights, getProfile, getFinancials } from "../controllers/securityController.js"
+import { getChart, getSuggestions, getRecommendationsCtrl, getNews, getNewsInsights, getProfile, getFinancials } from "./security.controller.js"
 
-const router = Router()
+const router: Router = Router()
 
 router.get("/", getChart)
 router.get("/suggestion", getSuggestions)

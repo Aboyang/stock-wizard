@@ -1,7 +1,7 @@
 import { Router } from "express"
-import { postAdvisorStream } from "../controllers/advisorController.js"
+import { postAdvisorStream } from "./advisor.controller.js"
 
-const router = Router()
+const router: Router = Router()
 
 router.post("/stream", postAdvisorStream)
 
