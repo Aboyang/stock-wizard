@@ -1,7 +1,11 @@
 import type { Request, Response } from "express"
-import { calcRollingStats, calcMovingAvg, calcRSI, calcMeanReversion } from "./analytics.helper.js"
 import type { IDataPoint } from "./analytics.helper.js"
-import { gatherMeanReversionInputs } from "./analytics.service.js"
+import { calcRollingStats } from "./rolling-stats/rolling-stats.helper.js"
+import { calcMovingAvg } from "./moving-average/moving-average.helper.js"
+import { calcRSI } from "./rsi/rsi.helper.js"
+import { calcKDJ } from "./kdj/kdj.helper.js"
+import { calcMeanReversion } from "./mean-reversion/mean-reversion.helper.js"
+import { gatherMeanReversionInputs } from "./mean-reversion/mean-reversion.service.js"
 import type { TChartInterval } from "../security/chart/chart.service.js"
 
 interface IWindowedStatsBody {
@@ -52,6 +56,19 @@ export function postRSI(req: Request<unknown, unknown, IWindowedStatsBody>, res:
     }
 
     const result = calcRSI(dataPoints, window)
+    res.json(result)
+}
+
+// KDJ stochastic oscillator
+export function postKDJ(req: Request<unknown, unknown, IWindowedStatsBody>, res: Response): void {
+    const { dataPoints, window } = req.body
+
+    if (!dataPoints || !window) {
+        res.status(400).send("Invalid input")
+        return
+    }
+
+    const result = calcKDJ(dataPoints, window)
     res.json(result)
 }
 

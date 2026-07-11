@@ -40,6 +40,18 @@ export interface IRSIResult {
     signal: TRSISignal
 }
 
+export type TKDJSignal = "overbought" | "oversold" | "neutral"
+
+export interface IKDJResult {
+    k: IRatePoint[]
+    d: IRatePoint[]
+    j: IRatePoint[]
+    latestK: number
+    latestD: number
+    latestJ: number
+    signal: TKDJSignal
+}
+
 export interface IBestCorrelated {
     symbol: string
     dataPoints: IPricePoint[]
@@ -145,6 +157,17 @@ export function useGetRSI(symbol: string, window: number) {
     return useQuery({
         queryKey: ["rsi", symbol, start, end, interval, window],
         queryFn: () => apiPost<IRSIResult>("/api/analytics/rsi", { dataPoints: chart.data, window }),
+        enabled: !!chart.data && !!window,
+    })
+}
+
+export function useGetKDJ(symbol: string, window: number) {
+    const chart = useGetChart(symbol)
+    const { start, end, interval } = useAppSelector((state) => state.form)
+
+    return useQuery({
+        queryKey: ["kdj", symbol, start, end, interval, window],
+        queryFn: () => apiPost<IKDJResult>("/api/analytics/kdj", { dataPoints: chart.data, window }),
         enabled: !!chart.data && !!window,
     })
 }

@@ -17,22 +17,25 @@ import './ChartView.css'
 import MAView from './MAView'
 import RollingView from './RollingView'
 import RSIView from './RSIView'
+import KDJView from './KDJView'
 import PairView from './PairView'
 import NewsView from './NewsView'
 import ProfileView from './ProfileView'
 
-type TWidgetKey = "rolling" | "ma" | "rsi"
+type TWidgetKey = "rolling" | "ma" | "rsi" | "kdj"
 
 const ANALYTICS_WIDGETS: { key: TWidgetKey; label: string }[] = [
     { key: "rolling", label: "Rolling Analytics" },
     { key: "ma", label: "Moving Averages" },
     { key: "rsi", label: "RSI" },
+    { key: "kdj", label: "KDJ" },
 ]
 
 const widgetComponents: Record<TWidgetKey, ReactNode> = {
     rolling: <RollingView key="rolling" />,
     ma: <MAView key="ma" />,
     rsi: <RSIView key="rsi" />,
+    kdj: <KDJView key="kdj" />,
 }
 
 function ChartView() {
