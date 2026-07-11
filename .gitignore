@@ -36,3 +36,7 @@ dump.rdb
 # Large media / docs (kept out of repo)
 Stock Wizard Demo.mov
 Stock Wizard.pdf
+
+# Claude Code local context
+CLAUDE.md
+.claude/
