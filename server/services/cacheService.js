@@ -1,6 +1,6 @@
 import { createClient } from "redis"
 
-const client = createClient({ url: "redis://localhost:6380" })
+const client = createClient({ url: process.env.REDIS_URL ?? "redis://localhost:6380" })
 
 client.on("error", (err) => {
     console.error("Redis error:", err)

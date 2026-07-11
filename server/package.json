@@ -1,5 +1,11 @@
 {
+  "name": "stock-wizard-server",
+  "private": true,
   "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.105.0",
     "@mozilla/readability": "^0.6.0",
