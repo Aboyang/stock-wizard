@@ -1,7 +1,8 @@
-import { fetchChart } from "../security/chart/chart.service.js"
-import type { TChartInterval } from "../security/chart/chart.service.js"
-import { getRecommendations } from "../security/suggestion/suggestion.service.js"
-import type { IDataPoint, IRecommendedSecurity } from "./analytics.helper.js"
+import { fetchChart } from "../../security/chart/chart.service.js"
+import type { TChartInterval } from "../../security/chart/chart.service.js"
+import { getRecommendations } from "../../security/suggestion/suggestion.service.js"
+import type { IDataPoint } from "../analytics.helper.js"
+import type { IRecommendedSecurity } from "./mean-reversion.helper.js"
 
 export interface IMeanReversionInputs {
     targetDataPoints: IDataPoint[]
