@@ -1,8 +1,9 @@
-import { useRef } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { removeSec, selectSec } from "../securitySlice"
-import { mean, standardDeviation } from "simple-statistics"
+import { mergeSnapshot } from "../analysisSlice"
 import { useGetChart } from "./query"
+import { calcCardMetrics } from "./metrics"
 
 import "./CardView.css"
 
@@ -11,12 +12,6 @@ interface ICardViewProps {
     index: number
     isEditMode: boolean
     enterEditMode: () => void
-}
-
-interface ICardMetrics {
-    annualReturn: number
-    annualVolatility: number
-    sharpe: number
 }
 
 function CardView({ symbol, index, isEditMode, enterEditMode }: ICardViewProps) {
@@ -70,35 +65,15 @@ function CardView({ symbol, index, isEditMode, enterEditMode }: ICardViewProps) 
         dispatch(removeSec({ symbol, index }))
     }
 
-    let metrics: ICardMetrics | null = null
+    const metrics = useMemo(
+        () => (priceData ? calcCardMetrics(priceData, interval) : null),
+        [priceData, interval]
+    )
 
-    if (priceData && priceData.length > 0) {
-
-        let scale = 0
-        switch (interval) {
-            case '1d':
-                scale = 252
-                break
-            case '1wk':
-                scale = 52
-                break
-            case '1mo':
-                scale = 12
-                break
-        }
-
-        const prices = priceData.map(data => data.price)
-
-        const percentChange: number[] = []
-        for (let i = 1; i < prices.length; i ++) {
-            percentChange.push((prices[i] / prices[i - 1] - 1))
-        }
-
-        const annualReturn = mean(percentChange) * scale
-        const annualVolatility = standardDeviation(percentChange) * Math.sqrt(scale)
-        const sharpe = (annualReturn - 0.04) / annualVolatility
-        metrics = { annualReturn, annualVolatility, sharpe }
-    }
+    // mirror the client-computed metrics into the analysis snapshot
+    useEffect(() => {
+        if (metrics) dispatch(mergeSnapshot({ symbol, data: { metrics } }))
+    }, [metrics, symbol, dispatch])
 
     const cardClass =
         (selectedSec === symbol ? "card selected" : "card") +

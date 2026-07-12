@@ -68,12 +68,13 @@ function RSIView() {
         <div className="vertical-display">
             <div className="rsi-chart">
                 <h3>RSI</h3>
+                <div className="chart-container">
                 <Line
                     className="chart"
                     data={{ datasets }}
                     options={{
                         responsive: true,
-                        aspectRatio: 2,
+                        maintainAspectRatio: false,
                         plugins: {
                             title: { display: true, text: "Relative Strength Index" },
                             legend: { position: "bottom" },
@@ -97,8 +98,8 @@ function RSIView() {
                             y: { min: 0, max: 100 }
                         }
                     }}
-                    height={400}
                 />
+                </div>
 
                 <div className="window">
                     <div className={window === 7 ? "option shade" : "option"} onClick={() => setWindow(7)}>7 Day Window</div>

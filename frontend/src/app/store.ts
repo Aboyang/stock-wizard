@@ -1,7 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit"
-import logger from 'redux-logger'
+import { createLogger } from 'redux-logger'
 import securityReducer from "../features/securitySlice"
 import formReducer from "../features/Form/formSlice"
+import analysisReducer from "../features/analysisSlice"
+
+// the analysis snapshots mirror whole datasets — logging them floods the console
+const logger = createLogger({
+    predicate: (_getState, action) => !action.type.startsWith("analysis/"),
+})
 
 const STORAGE_KEY = "stockWizard:symbols"
 
@@ -31,7 +37,8 @@ const store = configureStore({
 
     reducer: {
         form: formReducer,
-        security: securityReducer
+        security: securityReducer,
+        analysis: analysisReducer
     },
 
     preloadedState: persistedSymbols

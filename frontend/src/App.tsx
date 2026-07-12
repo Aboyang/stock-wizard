@@ -7,6 +7,7 @@ import FormView from "./features/Form/FormView"
 import CarouselView from "./features/Carousel/CarouselView"
 import ChartView from "./features/Chart/ChartView"
 import SettingsView from "./features/Settings/SettingsView"
+import ChatbotView from "./features/Chatbot/ChatbotView"
 
 import "./App.css"
 
@@ -22,6 +23,7 @@ function App() {
           <ChartView />
         </div>
         <SettingsView />
+        <ChatbotView />
       </QueryClientProvider>
     </Provider>
   )
