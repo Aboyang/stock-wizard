@@ -5,7 +5,36 @@ import { useAppSelector } from "../../app/hooks"
 import { useGetProfile, useGetFinancials } from "./query"
 import type { IFinancials } from "./query"
 
+import Modal from "../Modal/Modal"
+
 import "./ProfileView.css"
+
+const FIN_METRIC_INFO: Record<string, { what: string; how: string }> = {
+    "Revenue": {
+        what: "The total money the company brought in from sales over the period.",
+        how: "Look for steady YoY growth; slowing or negative growth is a warning sign. Compare the growth rate to peers in the same sector.",
+    },
+    "Gross Profit": {
+        what: "Revenue minus the direct cost of producing the goods or services sold.",
+        how: "Gross profit rising as fast as (or faster than) revenue signals pricing power; shrinking margins suggest rising costs or discounting.",
+    },
+    "Free Cash Flow": {
+        what: "Cash left over after running the business and paying for capital expenditures.",
+        how: "Consistently positive FCF can fund dividends and buybacks without borrowing; negative FCF means the company is burning cash to grow.",
+    },
+    "Target Price": {
+        what: "Analysts' average forecast of the share price over the next 12 months.",
+        how: "Compare it with the current price — a target well above current implies analyst upside, but treat it as sentiment, not a guarantee.",
+    },
+    "EPS (TTM)": {
+        what: "Profit per share earned over the trailing 12 months.",
+        how: "Growing EPS supports a rising share price; compare against past quarters and use it to sanity-check the P/E ratio.",
+    },
+    "P/E Ratio": {
+        what: "Share price divided by EPS — what you pay for each $1 of annual earnings.",
+        how: "Compare with the sector P/E shown below — well above sector may mean overvalued (or high growth expectations); below sector may signal a bargain or trouble.",
+    },
+}
 
 function Chip({ label, value }: { label: string; value: string | null | undefined }) {
     if (!value) return null
@@ -85,10 +114,25 @@ interface IStatCardProps {
 }
 
 function StatCard({ label, value, compare, yoy }: IStatCardProps) {
+    const [showModal, setShowModal] = useState(false)
     const yoyText = formatYoY(yoy)
     const yoyClass = yoy == null ? "" : yoy >= 0 ? " fin-stat-yoy-up" : " fin-stat-yoy-down"
+    const info = FIN_METRIC_INFO[label]
     return (
-        <div className="fin-stat">
+        <div
+            className="fin-stat"
+            onMouseEnter={() => setShowModal(true)}
+            onMouseLeave={() => setShowModal(false)}
+        >
+            {showModal && info && (
+                <Modal modalContent={
+                    <div className="modal-content">
+                        <strong>{label}</strong>
+                        <p>{info.what}</p>
+                        <p><strong>How to use it:</strong> {info.how}</p>
+                    </div>
+                }/>
+            )}
             <div className="fin-stat-value">{value}</div>
             <div className="fin-stat-label">{label}</div>
             {compare && <div className="fin-stat-compare">{compare}</div>}

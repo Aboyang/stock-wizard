@@ -62,7 +62,7 @@ function CardView({ symbol, index, isEditMode, enterEditMode }: ICardViewProps) 
     function handleClick() {
         if (isEditMode) return
         if (movedTooMuch.current) return
-        dispatch(selectSec(selectedSec === "" || selectedSec !== symbol ? symbol : ""))
+        dispatch(selectSec(symbol))
     }
 
     function handleRemove(e: React.MouseEvent<HTMLButtonElement>) {

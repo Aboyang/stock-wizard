@@ -108,6 +108,7 @@
 }
 
 .fin-stat {
+    position: relative;
     background-color: white;
     border: 1px solid #6050D4;
     border-radius: 12px;
@@ -116,6 +117,16 @@
     flex-direction: column;
     gap: 4px;
     box-shadow: 0 2px 6px 0 rgba(96, 80, 212, 0.12);
+    cursor: help;
+}
+
+.fin-stat .modal-box {
+    width: 240px;
+}
+
+.fin-grid > .fin-stat:nth-child(3n) .modal-box {
+    left: auto;
+    right: 0;
 }
 
 .fin-stat-value {
