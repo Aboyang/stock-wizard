@@ -35,7 +35,7 @@ const store = configureStore({
     },
 
     preloadedState: persistedSymbols
-        ? { security: { symbols: persistedSymbols, selectedSec: '' } }
+        ? { security: { symbols: persistedSymbols, selectedSec: persistedSymbols[0] ?? '' } }
         : undefined,
 
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger)

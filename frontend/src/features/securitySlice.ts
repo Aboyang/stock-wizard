@@ -8,7 +8,7 @@ export interface ISecurityState {
 
 const initialState: ISecurityState = {
     symbols: ['TSLA'],
-    selectedSec: '',
+    selectedSec: 'TSLA',
 }
 
 const securitySlice = createSlice({
@@ -20,10 +20,12 @@ const securitySlice = createSlice({
 
         addSymbol: (state, action: PayloadAction<string>) => {
             state.symbols.push(action.payload)
+            if (state.selectedSec === '') state.selectedSec = action.payload
         },
 
         removeSec: (state, action: PayloadAction<{ symbol: string; index: number }>) => {
             state.symbols.splice(action.payload.index, 1)
+            if (state.selectedSec === action.payload.symbol) state.selectedSec = state.symbols[0] ?? ''
         },
 
         selectSec: (state, action: PayloadAction<string>) => {
