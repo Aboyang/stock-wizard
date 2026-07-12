@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query"
+import { queryOptions, useQuery } from "@tanstack/react-query"
 import { apiGet, apiPost } from "../../lib/api"
 import { useAppSelector } from "../../app/hooks"
 import { useGetChart } from "../Card/query"
 import type { IPricePoint } from "../Card/query"
+import type { TInterval } from "../Form/formSlice"
 
 // --- response shapes (mirror the server's analytics/security types; dates are ISO strings over the wire) ---
 
@@ -126,54 +127,42 @@ export interface INewsInsight {
     recommendation?: string
 }
 
-// --- hooks ---
+// --- query options (shared between hooks and imperative ensureQueryData calls) ---
 
-export function useGetRollingStats(symbol: string, window: number) {
-    const chart = useGetChart(symbol)
-    const { start, end, interval } = useAppSelector((state) => state.form)
-
-    return useQuery({
+export function rollingStatsQueryOptions(symbol: string, start: string, end: string, interval: TInterval, window: number, dataPoints: IPricePoint[] | undefined) {
+    return queryOptions({
         queryKey: ["rolling-stats", symbol, start, end, interval, window],
-        queryFn: () => apiPost<IRollingStatsResult>("/api/analytics/rolling-stats", { dataPoints: chart.data, window }),
-        enabled: !!chart.data && !!window,
+        queryFn: () => apiPost<IRollingStatsResult>("/api/analytics/rolling-stats", { dataPoints, window }),
+        enabled: !!dataPoints && !!window,
     })
 }
 
-export function useGetMovingAverage(symbol: string, window: number) {
-    const chart = useGetChart(symbol)
-    const { start, end, interval } = useAppSelector((state) => state.form)
-
-    return useQuery({
+export function movingAverageQueryOptions(symbol: string, start: string, end: string, interval: TInterval, window: number, dataPoints: IPricePoint[] | undefined) {
+    return queryOptions({
         queryKey: ["moving-average", symbol, start, end, interval, window],
-        queryFn: () => apiPost<IMovingAverageResult>("/api/analytics/moving-average", { dataPoints: chart.data, window }),
-        enabled: !!chart.data && !!window,
+        queryFn: () => apiPost<IMovingAverageResult>("/api/analytics/moving-average", { dataPoints, window }),
+        enabled: !!dataPoints && !!window,
     })
 }
 
-export function useGetRSI(symbol: string, window: number) {
-    const chart = useGetChart(symbol)
-    const { start, end, interval } = useAppSelector((state) => state.form)
-
-    return useQuery({
+export function rsiQueryOptions(symbol: string, start: string, end: string, interval: TInterval, window: number, dataPoints: IPricePoint[] | undefined) {
+    return queryOptions({
         queryKey: ["rsi", symbol, start, end, interval, window],
-        queryFn: () => apiPost<IRSIResult>("/api/analytics/rsi", { dataPoints: chart.data, window }),
-        enabled: !!chart.data && !!window,
+        queryFn: () => apiPost<IRSIResult>("/api/analytics/rsi", { dataPoints, window }),
+        enabled: !!dataPoints && !!window,
     })
 }
 
-export function useGetKDJ(symbol: string, window: number) {
-    const chart = useGetChart(symbol)
-    const { start, end, interval } = useAppSelector((state) => state.form)
-
-    return useQuery({
+export function kdjQueryOptions(symbol: string, start: string, end: string, interval: TInterval, window: number, dataPoints: IPricePoint[] | undefined) {
+    return queryOptions({
         queryKey: ["kdj", symbol, start, end, interval, window],
-        queryFn: () => apiPost<IKDJResult>("/api/analytics/kdj", { dataPoints: chart.data, window }),
-        enabled: !!chart.data && !!window,
+        queryFn: () => apiPost<IKDJResult>("/api/analytics/kdj", { dataPoints, window }),
+        enabled: !!dataPoints && !!window,
     })
 }
 
-export function useGetProfile(symbol: string) {
-    return useQuery({
+export function profileQueryOptions(symbol: string) {
+    return queryOptions({
         queryKey: ["profile", symbol],
         queryFn: () => apiGet<ISecurityProfile>("/api/security/profile", { symbol }),
         enabled: !!symbol,
@@ -181,8 +170,8 @@ export function useGetProfile(symbol: string) {
     })
 }
 
-export function useGetFinancials(symbol: string) {
-    return useQuery({
+export function financialsQueryOptions(symbol: string) {
+    return queryOptions({
         queryKey: ["financials", symbol],
         queryFn: () => apiGet<IFinancials>("/api/security/financials", { symbol }),
         enabled: !!symbol,
@@ -190,8 +179,8 @@ export function useGetFinancials(symbol: string) {
     })
 }
 
-export function useGetNews(symbol: string) {
-    return useQuery({
+export function newsQueryOptions(symbol: string) {
+    return queryOptions({
         queryKey: ["news", symbol],
         queryFn: () => apiGet<INewsArticle[]>("/api/security/news", { symbol }),
         enabled: !!symbol,
@@ -199,19 +188,17 @@ export function useGetNews(symbol: string) {
     })
 }
 
-export function useGetNewsInsights(symbol: string, { enabled = true }: { enabled?: boolean } = {}) {
-    return useQuery({
+export function newsInsightsQueryOptions(symbol: string) {
+    return queryOptions({
         queryKey: ["news-insights", symbol],
         queryFn: () => apiGet<INewsInsight[]>("/api/security/news/insights", { symbol }),
-        enabled: !!symbol && enabled,
+        enabled: !!symbol,
         staleTime: 15 * 60 * 1000,
     })
 }
 
-export function useGetMeanReversion(symbol: string) {
-    const { start, end, interval } = useAppSelector((state) => state.form)
-
-    return useQuery({
+export function meanReversionQueryOptions(symbol: string, start: string, end: string, interval: TInterval) {
+    return queryOptions({
         queryKey: ["mean-reversion", symbol, start, end, interval],
         queryFn: () => apiPost<IMeanReversionResult>("/api/analytics/mean-reversion", {
             symbol,
@@ -221,4 +208,54 @@ export function useGetMeanReversion(symbol: string) {
         }),
         enabled: !!symbol,
     })
+}
+
+// --- hooks ---
+
+export function useGetRollingStats(symbol: string, window: number) {
+    const chart = useGetChart(symbol)
+    const { start, end, interval } = useAppSelector((state) => state.form)
+    return useQuery(rollingStatsQueryOptions(symbol, start, end, interval, window, chart.data))
+}
+
+export function useGetMovingAverage(symbol: string, window: number) {
+    const chart = useGetChart(symbol)
+    const { start, end, interval } = useAppSelector((state) => state.form)
+    return useQuery(movingAverageQueryOptions(symbol, start, end, interval, window, chart.data))
+}
+
+export function useGetRSI(symbol: string, window: number) {
+    const chart = useGetChart(symbol)
+    const { start, end, interval } = useAppSelector((state) => state.form)
+    return useQuery(rsiQueryOptions(symbol, start, end, interval, window, chart.data))
+}
+
+export function useGetKDJ(symbol: string, window: number) {
+    const chart = useGetChart(symbol)
+    const { start, end, interval } = useAppSelector((state) => state.form)
+    return useQuery(kdjQueryOptions(symbol, start, end, interval, window, chart.data))
+}
+
+export function useGetProfile(symbol: string) {
+    return useQuery(profileQueryOptions(symbol))
+}
+
+export function useGetFinancials(symbol: string) {
+    return useQuery(financialsQueryOptions(symbol))
+}
+
+export function useGetNews(symbol: string) {
+    return useQuery(newsQueryOptions(symbol))
+}
+
+export function useGetNewsInsights(symbol: string, { enabled = true }: { enabled?: boolean } = {}) {
+    return useQuery({
+        ...newsInsightsQueryOptions(symbol),
+        enabled: !!symbol && enabled,
+    })
+}
+
+export function useGetMeanReversion(symbol: string) {
+    const { start, end, interval } = useAppSelector((state) => state.form)
+    return useQuery(meanReversionQueryOptions(symbol, start, end, interval))
 }
