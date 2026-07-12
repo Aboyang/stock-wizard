@@ -87,3 +87,21 @@
     position: relative;
     display: inline-block;
 }
+
+.widget-selector {
+    background-color: #f6f6f6;
+    width: 100%;
+    height: fit-content;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.widget-selector .option {
+    cursor: pointer;
+    user-select: none;
+}

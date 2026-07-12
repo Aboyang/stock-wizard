@@ -1,0 +1,32 @@
+.rsi-chart {
+    background-color: #f6f6f6;
+    width: 100%;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px
+}
+
+.rsi-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: #f6f6f6;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.signal.overbought {
+    background-color: red;
+}
+
+.signal.oversold {
+    background-color: green;
+}
+
+.signal.neutral {
+    background-color: grey;
+}
