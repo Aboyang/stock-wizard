@@ -82,12 +82,13 @@ function KDJView() {
         <div className="vertical-display">
             <div className="kdj-chart">
                 <h3>KDJ</h3>
+                <div className="chart-container">
                 <Line
                     className="chart"
                     data={{ datasets }}
                     options={{
                         responsive: true,
-                        aspectRatio: 2,
+                        maintainAspectRatio: false,
                         plugins: {
                             title: { display: true, text: "KDJ Stochastic Oscillator" },
                             legend: { position: "bottom" },
@@ -111,8 +112,8 @@ function KDJView() {
                             y: { suggestedMin: 0, suggestedMax: 100 }
                         }
                     }}
-                    height={400}
                 />
+                </div>
 
                 <div className="window">
                     <div className={window === 9 ? "option shade" : "option"} onClick={() => setWindow(9)}>9 Day Window</div>

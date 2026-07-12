@@ -51,12 +51,13 @@ function RollingView() {
 
             <h3>Rolling Analytics</h3>
 
+            <div className="chart-container">
             <Line
                 className="chart"
                 data={{ datasets }}
                 options={{
                     responsive: true,
-                    aspectRatio: 2,
+                    maintainAspectRatio: false,
                     plugins: {
                         title: { display: true, text: "Rolling Analytics" },
                         legend: { position: "bottom" },
@@ -79,8 +80,8 @@ function RollingView() {
                         y: { beginAtZero: true }
                     }
                 }}
-                height={400}
             />
+            </div>
 
             <div className="window">
                 <div className={window === 5 ? "option shade" : "option"} onClick={() => setWindow(5)}>5 Day Window</div>
