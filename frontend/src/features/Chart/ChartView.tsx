@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { useQueries } from '@tanstack/react-query'
 import { useAppSelector } from '../../app/hooks'
 
 import { Chart as ChartJS, CategoryScale, LinearScale, TimeScale, PointElement, LineElement, Filler, Title, Tooltip, Legend } from 'chart.js'
@@ -27,6 +26,8 @@ function hexToRgba(hex: string, alpha: number) {
     const g = parseInt(hex.slice(3, 5), 16)
     const b = parseInt(hex.slice(5, 7), 16)
     return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
 type TWidgetKey = "rolling" | "ma" | "rsi" | "kdj"
 
 const ANALYTICS_WIDGETS: { key: TWidgetKey; label: string }[] = [
@@ -56,8 +57,6 @@ function ChartView() {
     function toggleWidget(key: TWidgetKey) {
         setSelectedWidgets(prev => prev.includes(key) ? prev : [prev[1], key])
     }
-
-    const displaySymbols = selectedSec !== "" ? [selectedSec] : symbols
 
     const delta = points.length ? points[points.length - 1].price - points[0].price : 0
     const lineColor = delta > 0 ? '#16A34A' : delta < 0 ? '#DC2626' : '#9CA3AF'
